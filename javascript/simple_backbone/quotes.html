@@ -9,7 +9,6 @@
     <table cellspacing='0' cellpadding='0' border='1' >
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Context</th>
                     <th>Theme</th>
                     <th>Source</th>
@@ -17,10 +16,9 @@
                 </tr>
             </thead>
             <tbody>
-            <% _.each(quotes, function(quote, key){ 
+            <% _.each(quotes, function(quote){ 
             %>
                 <tr>
-                    <td><%= key + 1 %></td>
                     <td><%= quote.context %></td>
                     <td><%= quote.theme %></td>
                     <td><%= quote.source %></td>
