@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require_relative 'array_extensions'
 
 class WhereTest < Minitest::Test
   def setup
