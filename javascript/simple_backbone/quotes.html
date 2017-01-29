@@ -9,16 +9,20 @@
     <table cellspacing='0' cellpadding='0' border='1' >
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
+                    <th>Context</th>
+                    <th>Theme</th>
+                    <th>Source</th>
+                    <th>Quote</th>
                 </tr>
             </thead>
             <tbody>
-            <% _.each(items, function(item, key, list){ 
+            <% _.each(quotes, function(quote){ 
             %>
                 <tr>
-                    <td><%= key %></td>
-                    <td><%= item.name %></td>
+                    <td><%= quote.context %></td>
+                    <td><%= quote.theme %></td>
+                    <td><%= quote.source %></td>
+                    <td><%= quote.quote %></td>
                 </tr>
             <% }); %>
         </tbody>
