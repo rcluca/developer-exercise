@@ -1,14 +1,14 @@
 class Card
-  attr_accessor :suite, :name, :value
+  attr_accessor :suit, :name, :value
 
-  def initialize(suite, name, value)
-    @suite, @name, @value = suite, name, value
+  def initialize(suit, name, value)
+    @suit, @name, @value = suit, name, value
   end
 end
 
 class Deck
   attr_accessor :playable_cards
-  SUITES = [:hearts, :diamonds, :spades, :clubs]
+  SUITS = [:hearts, :diamonds, :spades, :clubs]
   NAME_VALUES = {
     :two   => 2,
     :three => 3,
@@ -35,9 +35,9 @@ class Deck
 
   def shuffle
     @playable_cards = []
-    SUITES.each do |suite|
+    SUITS.each do |suit|
       NAME_VALUES.each do |name, value|
-        @playable_cards << Card.new(suite, name, value)
+        @playable_cards << Card.new(suit, name, value)
       end
     end
   end
@@ -48,44 +48,5 @@ class Hand
 
   def initialize
     @cards = []
-  end
-end
-
-require 'test/unit'
-
-class CardTest < Test::Unit::TestCase
-  def setup
-    @card = Card.new(:hearts, :ten, 10)
-  end
-  
-  def test_card_suite_is_correct
-    assert_equal @card.suite, :hearts
-  end
-
-  def test_card_name_is_correct
-    assert_equal @card.name, :ten
-  end
-  def test_card_value_is_correct
-    assert_equal @card.value, 10
-  end
-end
-
-class DeckTest < Test::Unit::TestCase
-  def setup
-    @deck = Deck.new
-  end
-  
-  def test_new_deck_has_52_playable_cards
-    assert_equal @deck.playable_cards.size, 52
-  end
-  
-  def test_dealt_card_should_not_be_included_in_playable_cards
-    card = @deck.deal_card
-    assert(@deck.playable_cards.include?(card))
-  end
-
-  def test_shuffled_deck_has_52_playable_cards
-    @deck.shuffle
-    assert_equal @deck.playable_cards.size, 52
   end
 end
