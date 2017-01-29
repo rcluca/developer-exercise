@@ -6,14 +6,31 @@ const View = Backbone.View.extend({
         el: '#target',
         template: _.template($("#quotesList").html()),
         initialize: function () {
-            this.coll = new Quotes()
-            this.listenTo(this.coll, 'reset', this.render);
+            this.quotes = new Quotes();
+            this.quotesPerPage = 15;
+            this.listenTo(this.quotes, 'reset', this.render);
             
-            this.coll.fetch({ success: () => { this.render() ; } });
+            this.quotes.fetch({
+                success: () => {
+                    this.pagedQuotes = this.pageQuotes(1);
+                    this.render();
+                }
+            });
         },
         render: function () {
-            this.$el.html(this.template({ quotes: this.coll.toJSON() }));
+            this.$el.html(this.template({
+                quotes: this.pagedQuotes.toJSON()
+            }));
             return this;
+        },
+        pageQuotes(page){
+            if (this.quotes.length <= this.quotesPerPage)
+                return this.quotes;
+
+            const fromQuote = page * this.quotesPerPage - this.quotesPerPage;
+            const toQuote = page * this.quotesPerPage;
+
+            return new Quotes(_.chain(this.quotes.models).rest(fromQuote).first(toQuote).value());
         }
     });
 
