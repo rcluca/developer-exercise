@@ -4,15 +4,19 @@ const Quotes = Backbone.Collection.extend({
 
 const View = Backbone.View.extend({
         el: '#target',
+        events:{
+            "click #nextPage":"nextPage"
+        },
         template: _.template($("#quotesList").html()),
         initialize: function () {
             this.quotes = new Quotes();
+            this.currentPage = 1;
             this.quotesPerPage = 15;
             this.listenTo(this.quotes, 'reset', this.render);
             
             this.quotes.fetch({
                 success: () => {
-                    this.pagedQuotes = this.pageQuotes(1);
+                    this.pagedQuotes = this.pageQuotes(this.currentPage);
                     this.render();
                 }
             });
@@ -28,9 +32,16 @@ const View = Backbone.View.extend({
                 return this.quotes;
 
             const fromQuote = page * this.quotesPerPage - this.quotesPerPage;
-            const toQuote = page * this.quotesPerPage;
 
-            return new Quotes(_.chain(this.quotes.models).rest(fromQuote).first(toQuote).value());
+            return new Quotes(_.chain(this.quotes.models).rest(fromQuote).first(this.quotesPerPage).value());
+        },
+        nextPage(){
+            const fromQuote = (this.currentPage + 1) * this.quotesPerPage - this.quotesPerPage;
+            if (fromQuote <= this.quotes.length){
+                this.currentPage++;
+                this.pagedQuotes = this.pageQuotes(this.currentPage);
+                this.render();            
+            }
         }
     });
 
