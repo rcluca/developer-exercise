@@ -5,7 +5,8 @@ const Quotes = Backbone.Collection.extend({
 const View = Backbone.View.extend({
         el: '#target',
         events:{
-            "click #nextPage":"nextPage"
+            "click #nextPage":"nextPage",
+            "click #previousPage":"previousPage"
         },
         template: _.template($("#quotesList").html()),
         initialize: function () {
@@ -42,7 +43,14 @@ const View = Backbone.View.extend({
                 this.pagedQuotes = this.pageQuotes(this.currentPage);
                 this.render();            
             }
-        }
+        },
+        previousPage(){
+            if (this.currentPage >= 2){
+                this.currentPage--;
+                this.pagedQuotes = this.pageQuotes(this.currentPage);
+                this.render();            
+            }
+        }        
     });
 
 const view = new View();
