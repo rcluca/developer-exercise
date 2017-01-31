@@ -1,13 +1,22 @@
 require_relative 'hand'
 
 class Person
-    attr_accessor :hand
+    attr_reader :hand
 
-    def initialize
+    def initialize(blackjack)
         @hand = Hand.new
+        @blackjack = blackjack
     end
 
-    def add_card_to_hand(card)
-        @hand.add_card(card)
+    def hit_me
+        @hand.add_card(@blackjack.deal_card)
     end
+end
+
+class Player < Person
+
+end
+
+class Dealer < Person
+
 end
