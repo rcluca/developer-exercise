@@ -20,8 +20,9 @@ class Blackjack
     :king  => 10,
     :ace   => [11, 1]}
 
-    def initialize()
-        @deck = Deck.new
+    def initialize(deck)
+        deck.shuffle
+        @deck = deck
         @player = Player.new(self)
         @dealer = Dealer.new(self)
         @person_set = false
