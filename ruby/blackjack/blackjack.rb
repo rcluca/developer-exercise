@@ -5,6 +5,21 @@ require_relative 'person'
 class Blackjack
     attr_reader :dealer_card_shown
 
+    CARD_VALUES = {
+    :two   => 2,
+    :three => 3,
+    :four  => 4,
+    :five  => 5,
+    :six   => 6,
+    :seven => 7,
+    :eight => 8,
+    :nine  => 9,
+    :ten   => 10,
+    :jack  => 10,
+    :queen => 10,
+    :king  => 10,
+    :ace   => [11, 1]}
+
     def initialize()
         @deck = Deck.new
         @player = Player.new(self)
@@ -13,10 +28,6 @@ class Blackjack
 
         deal_to_player
         deal_to_dealer
-    end
-
-    def deal_card
-      @deck.deal_card
     end
 
     def get_person_to_play_with(person)
@@ -31,6 +42,10 @@ class Blackjack
               raise "Can only pick ':player' or ':dealer'."
             end
         end
+    end
+
+    def deal_card
+      @deck.deal_card
     end
 
 private
