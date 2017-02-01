@@ -45,7 +45,7 @@ class PersonTest < Test::Unit::TestCase
         assert(possible_hand_values.any? {|value| value == 32})
     end
 
-    def test_given_a_player_has_a_two_card_hand_with_no_aces_then_player_has_not_won
+    def test_given_a_player_has_a_two_card_hand_worth_less_than_21_then_player_has_not_won
         blackjack = Blackjack.new(@deck_stub)
         player = blackjack.get_person_to_play_with(:player)
         assert(player.win == false)
@@ -65,5 +65,29 @@ class PersonTest < Test::Unit::TestCase
         assert(player.hand.cards.size == 2)
         player.hit_me
         assert(player.hand.cards.size == 2)
+    end
+
+    def test_given_a_player_has_a_two_card_hand_worth_less_than_21_then_player_has_not_busted
+        blackjack = Blackjack.new(@deck_stub)
+        player = blackjack.get_person_to_play_with(:player)
+        assert(player.bust == false)
+    end    
+
+    def test_given_a_player_has_a_hand_worth_over_21_then_player_has_busted
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:filler),Card.new(:hearts,:filler),Card.new(:hearts,:two)]
+        blackjack = Blackjack.new(DeckStub.new(cards))
+        player = blackjack.get_person_to_play_with(:player)
+        player.hit_me
+        assert(player.bust == true)
+    end
+    
+    def test_given_a_player_has_a_busted_hand_then_they_can_no_longer_hit
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:filler),Card.new(:hearts,:filler),Card.new(:hearts,:two)]
+        blackjack = Blackjack.new(DeckStub.new(cards))
+        player = blackjack.get_person_to_play_with(:player)
+        player.hit_me
+        assert(player.hand.cards.size == 3)
+        player.hit_me
+        assert(player.hand.cards.size == 3)
     end          
 end

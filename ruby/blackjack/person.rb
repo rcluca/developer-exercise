@@ -3,15 +3,17 @@ require_relative 'hand'
 class Person
     attr_reader :hand
     attr_reader :win
+    attr_reader :bust
 
     def initialize(blackjack)
         @hand = Hand.new
         @blackjack = blackjack
         @win = false
+        @bust = false
     end
 
     def hit_me
-        if !@win
+        if !@win and !@bust
             @hand.add_card(@blackjack.deal_card)
         end
     end
@@ -55,6 +57,8 @@ private
     def win_or_bust
         if @hand.cards.size == 2 and possible_hand_values.any? {|value| value == 21}
             @win = true
+        elsif possible_hand_values.all? {|value| value > 21}
+            @bust = true
         end
     end
 end
