@@ -2,14 +2,18 @@ require_relative 'hand'
 
 class Person
     attr_reader :hand
+    attr_reader :win
 
     def initialize(blackjack)
         @hand = Hand.new
         @blackjack = blackjack
+        @win = false
     end
 
     def hit_me
-        @hand.add_card(@blackjack.deal_card)
+        if !@win
+            @hand.add_card(@blackjack.deal_card)
+        end
     end
 
     def possible_hand_values
@@ -43,7 +47,16 @@ class Person
 end
 
 class Player < Person
-
+    def hit_me
+        super
+        win_or_bust
+    end
+private
+    def win_or_bust
+        if @hand.cards.size == 2 and possible_hand_values.any? {|value| value == 21}
+            @win = true
+        end
+    end
 end
 
 class Dealer < Person

@@ -11,8 +11,13 @@ class DeckStub
     :ace,
     :ace]
 
-  def initialize
-    shuffle
+  def initialize(provided_cards = nil)
+    if provided_cards.nil?
+      shuffle
+    else
+      @provided_cards = provided_cards
+      @playable_cards = provided_cards
+    end
   end
 
   def deal_card
@@ -20,10 +25,12 @@ class DeckStub
   end
 
   def shuffle
-    @playable_cards = []
-    SUITS.each do |suit|
-      NAMES.each do |name|
-        @playable_cards << Card.new(suit, name)
+    if @provided_cards.nil?
+      @playable_cards = []
+      SUITS.each do |suit|
+        NAMES.each do |name|
+          @playable_cards << Card.new(suit, name)
+        end
       end
     end
   end
