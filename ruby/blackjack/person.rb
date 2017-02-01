@@ -46,6 +46,10 @@ class Person
             possible_hand_values << base_value
         end
     end
+
+    def dealer_card_shown
+        @blackjack.dealer_card_shown
+    end
 end
 
 class Player < Person

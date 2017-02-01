@@ -4,6 +4,7 @@ require_relative 'person'
 
 class Blackjack
     attr_reader :dealer_card_shown
+    attr_reader :player
 
     CARD_VALUES = {
     :two   => 2,
@@ -20,6 +21,17 @@ class Blackjack
     :king  => 10,
     :ace   => [11, 1]}
 
+    def self.start_playing(deck)
+      blackjack = Blackjack.new(deck)
+      blackjack.player
+    end
+
+    def deal_card
+      @deck.deal_card
+    end
+
+private
+    :new
     def initialize(deck)
         deck.shuffle
         @deck = deck
@@ -31,25 +43,6 @@ class Blackjack
         deal_to_dealer
     end
 
-    def get_person_to_play_with(person)
-        if !@person_set
-            if person == :player
-              @person_set = true
-              @player
-            elsif person == :dealer
-              @person_set = true
-              @dealer
-            else
-              raise "Can only pick ':player' or ':dealer'."
-            end
-        end
-    end
-
-    def deal_card
-      @deck.deal_card
-    end
-
-private
     def deal_to_player
         @player.hit_me()
         @player.hit_me()

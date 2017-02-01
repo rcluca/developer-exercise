@@ -8,20 +8,14 @@ class BlackjackTest < Test::Unit::TestCase
     end
 
     def test_given_a_new_blackjack_game_then_player_is_dealt_two_cards
-        blackjack = Blackjack.new(@deck_stub)
-        player = blackjack.get_person_to_play_with(:player)
+        player = Blackjack.start_playing(@deck_stub)
         assert(player.hand.cards.size == 2)
     end
 
-    def test_given_a_new_blackjack_game_then_dealer_is_dealt_two_cards
-        blackjack = Blackjack.new(@deck_stub)
-        dealer = blackjack.get_person_to_play_with(:dealer)
-        assert(dealer.hand.cards.size == 2)
-    end
-
     def test_given_a_new_blackjack_game_then_dealer_card_shown_is_second_dealt_to_dealer
-        blackjack = Blackjack.new(@deck_stub)
-        dealer = blackjack.get_person_to_play_with(:dealer)
-        assert(blackjack.dealer_card_shown == dealer.hand.cards[1])
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:three),Card.new(:hearts,:four)]
+        player = Blackjack.start_playing(DeckStub.new(cards))
+        assert(player.dealer_card_shown.suit == :hearts)
+        assert(player.dealer_card_shown.name == :four)
     end
 end
