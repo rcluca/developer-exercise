@@ -4,6 +4,12 @@ class Person
     attr_reader :hand
     attr_reader :win
     attr_reader :bust
+    ACE_VALUES = {
+        1 => [1,11],
+        2 => [2,12],
+        3 => [3,13],
+        4 => [4,14]
+    }
 
     def initialize(blackjack)
         @hand = Hand.new
@@ -26,29 +32,20 @@ class Person
     end
 
     def possible_hand_values
-        ace_values = []
+        ace_count = 0
         base_value = 0
         @hand.cards.each do |card|
             if card.name == :ace
-                ace_values.push(*Blackjack::CARD_VALUES[card.name])
+                ace_count += 1
             else
                 base_value += Blackjack::CARD_VALUES[card.name]
             end
         end
 
         possible_hand_values = []
-        if ace_values.size > 0
-            possible_ace_values = ace_values.combination(ace_values.size/2).to_a.uniq
-
-            possible_ace_values.each do |values|
-                aces_value = 0
-                values.each do |value|
-                    aces_value += value
-                end
-                possible_hand_values << (base_value + aces_value)
-            end
-
-            possible_hand_values = possible_hand_values.uniq
+        if ace_count > 0
+            possible_hand_values << (base_value + ACE_VALUES[ace_count][0])
+            possible_hand_values << (base_value + ACE_VALUES[ace_count][1])
         else
             possible_hand_values << base_value
         end

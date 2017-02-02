@@ -35,10 +35,9 @@ class PersonTest < Test::Unit::TestCase
         player.hit_me
         player.hit_me
         possible_hand_values = player.possible_hand_values
-        assert(possible_hand_values.size == 3)
+        assert(possible_hand_values.size == 2)
         assert(possible_hand_values.any? {|value| value == 12})
         assert(possible_hand_values.any? {|value| value == 22})
-        assert(possible_hand_values.any? {|value| value == 32})
     end
 
     def test_given_a_player_has_a_two_card_hand_worth_less_than_21_then_player_has_not_won
