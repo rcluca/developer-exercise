@@ -6,7 +6,10 @@ const View = Backbone.View.extend({
         el: '#target',
         events:{
             "click #nextPage":"nextPage",
-            "click #previousPage":"previousPage"
+            "click #previousPage":"previousPage",
+            "click #noThemeFilter":function(){this.filterByTheme()},
+            "click #gameThemeFilter": function(){this.filterByTheme("games")},
+            "click #movieThemeFilter":function(){this.filterByTheme("movies")}
         },
         template: _.template($("#quotesList").html()),
         initialize: function () {
@@ -17,7 +20,8 @@ const View = Backbone.View.extend({
             
             this.quotes.fetch({
                 success: () => {
-                    this.pagedQuotes = this.pageQuotes(this.currentPage);
+                    this.filteredQuotes = new Quotes(this.quotes.models);
+                    this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
                     this.render();
                 }
             });
@@ -28,29 +32,38 @@ const View = Backbone.View.extend({
             }));
             return this;
         },
-        pageQuotes(page){
-            if (this.quotes.length <= this.quotesPerPage)
-                return this.quotes;
+        pageQuotes(quotes, page){
+            if (quotes.length <= this.quotesPerPage)
+                return quotes;
 
             const fromQuote = page * this.quotesPerPage - this.quotesPerPage;
 
-            return new Quotes(_.chain(this.quotes.models).rest(fromQuote).first(this.quotesPerPage).value());
+            return new Quotes(_.chain(quotes.models).rest(fromQuote).first(this.quotesPerPage).value());
         },
         nextPage(){
             const fromQuote = (this.currentPage + 1) * this.quotesPerPage - this.quotesPerPage;
             if (fromQuote <= this.quotes.length){
                 this.currentPage++;
-                this.pagedQuotes = this.pageQuotes(this.currentPage);
+                this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
                 this.render();            
             }
         },
         previousPage(){
             if (this.currentPage >= 2){
                 this.currentPage--;
-                this.pagedQuotes = this.pageQuotes(this.currentPage);
+                this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
                 this.render();            
             }
-        }        
+        },
+        filterByTheme(theme){
+            this.filteredQuotes = this.quotes;
+            if (theme){
+                this.filteredQuotes = new Quotes(this.quotes.where({"theme": theme}));
+            }
+            
+            this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
+            this.render();            
+        }
     });
 
 const view = new View();
