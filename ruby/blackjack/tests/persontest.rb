@@ -47,13 +47,13 @@ class PersonTest < Test::Unit::TestCase
     end
 
     def test_given_a_player_has_a_two_card_hand_with_one_ace_and_a_card_worth_ten_then_player_has_won
-        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:ace)]
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:ace),Card.new(:hearts,:two),Card.new(:hearts,:three)]
         player = Blackjack.start_playing(DeckStub.new(cards))
         assert(player.win == true)
     end
     
     def test_given_a_player_has_a_winning_hand_then_they_can_no_longer_hit
-        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:ace)]
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:ace),Card.new(:hearts,:two),Card.new(:hearts,:three)]
         player = Blackjack.start_playing(DeckStub.new(cards))
         assert(player.hand.cards.size == 2)
         player.hit_me
@@ -66,18 +66,46 @@ class PersonTest < Test::Unit::TestCase
     end    
 
     def test_given_a_player_has_a_hand_worth_over_21_then_player_has_busted
-        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:filler),Card.new(:hearts,:filler),Card.new(:hearts,:two)]
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:two),Card.new(:hearts,:three),Card.new(:hearts,:two)]
         player = Blackjack.start_playing(DeckStub.new(cards))
         player.hit_me
         assert(player.bust == true)
     end
     
     def test_given_a_player_has_a_busted_hand_then_they_can_no_longer_hit
-        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:filler),Card.new(:hearts,:filler),Card.new(:hearts,:two)]
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:two),Card.new(:hearts,:three),Card.new(:hearts,:two)]
         player = Blackjack.start_playing(DeckStub.new(cards))
         player.hit_me
         assert(player.hand.cards.size == 3)
         player.hit_me
         assert(player.hand.cards.size == 3)
-    end          
+    end
+
+    def test_given_a_player_has_a_hand_higher_than_dealer_and_neither_have_busted_then_player_wins
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:seven),Card.new(:hearts,:eight),Card.new(:hearts,:two)]
+        player = Blackjack.start_playing(DeckStub.new(cards))
+        player.stay
+        assert(player.win == true)
+    end
+    
+    def test_given_a_player_has_a_hand_higher_than_dealer_and_dealer_busts_then_player_wins
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:queen),Card.new(:hearts,:seven),Card.new(:hearts,:eight),Card.new(:hearts,:nine)]
+        player = Blackjack.start_playing(DeckStub.new(cards))
+        player.stay
+        assert(player.win == true)
+    end  
+
+    def test_given_a_dealer_has_a_hand_higher_than_player_and_neither_have_busted_then_dealer_wins
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:seven),Card.new(:hearts,:jack),Card.new(:hearts,:eight)]
+        player = Blackjack.start_playing(DeckStub.new(cards))
+        player.stay
+        assert(player.win == false)
+    end
+
+    def test_given_a_dealer_has_an_immediately_winning_hand_then_dealer_wins
+        cards = [Card.new(:hearts,:ten),Card.new(:hearts,:seven),Card.new(:hearts,:jack),Card.new(:hearts,:ace)]
+        player = Blackjack.start_playing(DeckStub.new(cards))
+        player.stay
+        assert(player.win == false)
+    end
 end

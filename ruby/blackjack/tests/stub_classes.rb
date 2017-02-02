@@ -6,8 +6,8 @@ class DeckStub
   NAMES = [
     :two,
     :eight,
-    :filler,
-    :filler,
+    :two,
+    :three,
     :ace,
     :ace]
 

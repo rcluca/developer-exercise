@@ -15,6 +15,13 @@ class Person
     def hit_me
         if !@win and !@bust
             @hand.add_card(@blackjack.deal_card)
+            win_or_bust
+        end
+    end
+
+    def stay
+        if !@win and !@bust
+            @win = @blackjack.player_stays
         end
     end
 
@@ -50,13 +57,7 @@ class Person
     def dealer_card_shown
         @blackjack.dealer_card_shown
     end
-end
 
-class Player < Person
-    def hit_me
-        super
-        win_or_bust
-    end
 private
     def win_or_bust
         if @hand.cards.size == 2 and possible_hand_values.any? {|value| value == 21}
@@ -64,9 +65,14 @@ private
         elsif possible_hand_values.all? {|value| value > 21}
             @bust = true
         end
-    end
+    end    
+end
+
+class Player < Person
+
 end
 
 class Dealer < Person
-
+    attr_writer :win
+    attr_writer :bust
 end

@@ -30,6 +30,27 @@ class Blackjack
       @deck.deal_card
     end
 
+    def player_stays
+      while true do
+        if @dealer.win
+          player_wins = false
+          return player_wins
+        elsif @dealer.bust
+          player_wins = true
+          return player_wins
+        elsif @dealer.possible_hand_values.any? {|value| value >= 17 and value <= 21}
+          if @player.possible_hand_values.any? {|player_value| player_value < 21 and @dealer.possible_hand_values.select{|value| value < 21}.all? {|dealer_value| dealer_value < player_value}}
+            player_wins = true
+            return player_wins
+          else
+            player_wins = false
+            return player_wins
+          end
+        end
+        @dealer.hit_me
+      end
+    end
+
 private
     :new
     def initialize(deck)
