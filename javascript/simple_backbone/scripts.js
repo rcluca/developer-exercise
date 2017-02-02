@@ -9,7 +9,8 @@ const View = Backbone.View.extend({
             "click #previousPage":"previousPage",
             "click #noThemeFilter":function(){this.filterByTheme()},
             "click #gameThemeFilter": function(){this.filterByTheme("games")},
-            "click #movieThemeFilter":function(){this.filterByTheme("movies")}
+            "click #movieThemeFilter":function(){this.filterByTheme("movies")},
+            "change #quoteFilterInput":function(e){this.filterByQuoteText(e.target.value)}
         },
         template: _.template($("#quotesList").html()),
         initialize: function () {
@@ -63,7 +64,20 @@ const View = Backbone.View.extend({
             
             this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
             this.render();            
-        }
+        },
+        filterByQuoteText(textSnippet){
+            this.filteredQuotes = this.quotes;
+            if (textSnippet){
+                this.filteredQuotes = new Quotes(
+                    this.filteredQuotes.filter(function(model) {
+                        return model.attributes.quote.toLowerCase().indexOf(textSnippet.toLowerCase()) >= 0;
+                    })
+                );
+            }
+            
+            this.pagedQuotes = this.pageQuotes(this.filteredQuotes, this.currentPage);
+            this.render();            
+        }        
     });
 
 const view = new View();
